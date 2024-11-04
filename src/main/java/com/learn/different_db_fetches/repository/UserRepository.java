@@ -13,5 +13,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT new com.learn.different_db_fetches.dto.UserNameDto(u.firstName, u.lastName) FROM User u WHERE u.age = :age")
-    List<UserNameDto> findFirstNameAndLastNameByAge(@Param("age") int age);
+    List<UserNameDto> getUserNameByAgeViaHQL(@Param("age") int age);
+
+    @Query(name = "User.getByAge", nativeQuery = true)
+    List<UserNameDto> getUserNameByAgeViaStoredProcedure(@Param("age") Integer age);
 }

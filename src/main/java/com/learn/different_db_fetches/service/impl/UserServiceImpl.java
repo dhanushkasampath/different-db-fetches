@@ -33,9 +33,22 @@ public class UserServiceImpl implements UserService {
         return List.of();
     }
 
+    /**
+     * Below is the stored procedure I executed against the schema
+
+      DELIMITER $$
+      CREATE PROCEDURE get_username_by_age(IN given_age INT)
+      BEGIN
+          SELECT first_name, last_name from user WHERE age = given_age;
+      END $$
+      DELIMITER ;
+
+     */
     private List<UserNameDto> getDataByStoredProcedure(Integer age) {
         log.info("fetching data by stored procedures...");
-        return List.of();
+        List<UserNameDto> userNameDtoList = userRepository.getUserNameByAgeViaStoredProcedure(age);
+        log.info("Fetched data: {}", userNameDtoList);
+        return userNameDtoList;
     }
 
     private List<UserNameDto> getDataByNativeQuery(Integer age) {
@@ -45,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
     private List<UserNameDto> getDataByHQL(Integer age) {
         log.info("fetching data by hql...");
-        List<UserNameDto> userNameDtoList = userRepository.findFirstNameAndLastNameByAge(age);
+        List<UserNameDto> userNameDtoList = userRepository.getUserNameByAgeViaHQL(age);
         log.info("Fetched data: {}", userNameDtoList);
         return userNameDtoList;
     }

@@ -10,6 +10,21 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table
+@NamedStoredProcedureQuery( // below code is needed for fetching data via stored procedure
+    name = "User.getByAge",
+    procedureName = "get_username_by_age",
+    resultSetMappings = "UserNameDtoMapping",
+    parameters = {
+        @StoredProcedureParameter(mode = ParameterMode.IN, name = "age", type = Integer.class)
+    }
+)
+@SqlResultSetMapping(
+    name = "UserNameDtoMapping",
+    columns = {
+        @ColumnResult(name = "first_name", type = String.class),
+        @ColumnResult(name = "last_name", type = String.class)
+    }
+)
 public class User {
 
     @Id
