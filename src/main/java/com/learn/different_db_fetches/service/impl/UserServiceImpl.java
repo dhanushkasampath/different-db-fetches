@@ -1,9 +1,17 @@
 package com.learn.different_db_fetches.service.impl;
 
 import com.learn.different_db_fetches.dto.UserNameDto;
+import com.learn.different_db_fetches.entity.User;
 import com.learn.different_db_fetches.enums.FetchType;
 import com.learn.different_db_fetches.repository.UserRepository;
 import com.learn.different_db_fetches.service.UserService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +24,9 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     @Override
     public List<UserNameDto> getUserNameListByAge(Integer age, FetchType fetchType) {
@@ -71,6 +82,23 @@ public class UserServiceImpl implements UserService {
 
     private List<UserNameDto> getDataByCriteriaApi(Integer age) {
         log.info("fetching data by criteria api...");
-        return List.of();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserNameDto> query = cb.createQuery(UserNameDto.class);
+
+        //Root<User>: Represents the entity (User) in the query.
+        Root<User> user = query.from(User.class);
+
+        // Select firstName and lastName only
+        query.select(cb.construct(UserNameDto.class, user.get("firstName"), user.get("lastName")));
+
+        // Set the where condition for age
+        Predicate agePredicate = cb.equal(user.get("age"), age);
+        query.where(agePredicate);
+
+        // Execute the query
+        TypedQuery<UserNameDto> typedQuery = entityManager.createQuery(query);
+        List<UserNameDto> userNameDtoList = typedQuery.getResultList();
+        log.info("Fetched data: {}", userNameDtoList);
+        return userNameDtoList;
     }
 }
