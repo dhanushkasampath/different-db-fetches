@@ -7,6 +7,7 @@ import com.learn.different_db_fetches.repository.UserRepository;
 import com.learn.different_db_fetches.service.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -64,12 +65,23 @@ public class UserServiceImpl implements UserService {
         return userNameDtoList;
     }
 
+    /**
+     * A Native SQL Query allows you to write SQL exactly as it is executed by the database, bypassing Hibernate's entity mapping.
+     * In this case, we are using a query to directly retrieve first_name and last_name from the user table,
+     * which may or may not be associated with a JPA entity.
+     *
+     * nativeQuery = true tells Spring Data JPA that this is a native SQL query.
+     *
+     * @param age
+     * @return
+     */
     private List<UserNameDto> getDataByNativeQuery(Integer age) {
         log.info("fetching data by native query...");
-//        List<UserNameDto> userNameDtoList = userRepository.getUserNameByAgeViaNativeQuery(age);
-//        log.info("Fetched data: {}", userNameDtoList);
-//        return userNameDtoList;
-        return List.of();
+        Query query = entityManager.createNativeQuery("SELECT u.first_name, u.last_name FROM user u WHERE u.age = :age", "UserNameDtoMapping");
+        query.setParameter("age", age);
+        List<UserNameDto> userNameDtoList = query.getResultList();
+        log.info("Fetched data: {}", userNameDtoList);
+        return userNameDtoList;
     }
 
     private List<UserNameDto> getDataByHQL(Integer age) {

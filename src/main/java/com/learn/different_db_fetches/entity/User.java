@@ -1,5 +1,6 @@
 package com.learn.different_db_fetches.entity;
 
+import com.learn.different_db_fetches.dto.UserNameDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,16 +19,19 @@ import lombok.*;
         @StoredProcedureParameter(mode = ParameterMode.IN, name = "age", type = Integer.class)
     }
 )
-@SqlResultSetMapping(
-    name = "UserNameDtoMapping",
-    columns = {
-        @ColumnResult(name = "first_name", type = String.class),
-        @ColumnResult(name = "last_name", type = String.class)
-    }
-)
 @NamedQuery(
         name = "User.findUsersByAge",
         query = "SELECT new com.learn.different_db_fetches.dto.UserNameDto(u.firstName, u.lastName) FROM User u WHERE u.age = :age"
+)
+@SqlResultSetMapping( // this was needed for native query as well as stored procedure query
+    name = "UserNameDtoMapping",
+    classes = @ConstructorResult(
+        targetClass = UserNameDto.class,
+        columns = {
+            @ColumnResult(name = "first_name", type = String.class),
+            @ColumnResult(name = "last_name", type = String.class)
+        }
+    )
 )
 public class User {
 

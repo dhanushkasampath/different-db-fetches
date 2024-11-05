@@ -12,15 +12,17 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+    /**
+     * For HQL, you don't need to write nativeQuery = true. You can directly write a query based on the entity properties.
+     *
+     * @param age
+     * @return
+     */
     @Query("SELECT new com.learn.different_db_fetches.dto.UserNameDto(u.firstName, u.lastName) FROM User u WHERE u.age = :age")
     List<UserNameDto> getUserNameByAgeViaHQL(@Param("age") int age);
 
     @Query(name = "User.getByAge")
     List<UserNameDto> getUserNameByAge(@Param("age") Integer age);
-
-//    @Query(value = "SELECT first_name, last_name FROM user WHERE age = ?1", nativeQuery = true)
-//    @Query(value = "SELECT new com.learn.different_db_fetches.dto.UserNameDto(first_name, last_name) FROM user WHERE age = ?1", nativeQuery = true)
-//    List<UserNameDto> getUserNameByAgeViaNativeQuery(@Param("age") int age);
 
     @Query(name = "User.findUsersByAge")
     List<UserNameDto> anyNameWeWantToGetUsersByAgeViaNamedQuery(@Param("age") int age);
