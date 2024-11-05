@@ -24,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    public static final String FETCHED_DATA = "Fetched data: {}";
     private final UserRepository userRepository;
 
     @PersistenceContext
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     private List<UserNameDto> getDataByNamedQuery(Integer age) {
         log.info("fetching data by named query...");
         List<UserNameDto> userNameDtoList = userRepository.anyNameWeWantToGetUsersByAgeViaNamedQuery(age);
-        log.info("Fetched data: {}", userNameDtoList);
+        log.info(FETCHED_DATA, userNameDtoList);
         return userNameDtoList;
     }
 
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
     private List<UserNameDto> getDataByStoredProcedure(Integer age) {
         log.info("fetching data by stored procedures...");
         List<UserNameDto> userNameDtoList = userRepository.getUserNameByAge(age);
-        log.info("Fetched data: {}", userNameDtoList);
+        log.info(FETCHED_DATA, userNameDtoList);
         return userNameDtoList;
     }
 
@@ -80,14 +81,14 @@ public class UserServiceImpl implements UserService {
         Query query = entityManager.createNativeQuery("SELECT u.first_name, u.last_name FROM user u WHERE u.age = :age", "UserNameDtoMapping");
         query.setParameter("age", age);
         List<UserNameDto> userNameDtoList = query.getResultList();
-        log.info("Fetched data: {}", userNameDtoList);
+        log.info(FETCHED_DATA, userNameDtoList);
         return userNameDtoList;
     }
 
     private List<UserNameDto> getDataByHQL(Integer age) {
         log.info("fetching data by hql...");
         List<UserNameDto> userNameDtoList = userRepository.getUserNameByAgeViaHQL(age);
-        log.info("Fetched data: {}", userNameDtoList);
+        log.info(FETCHED_DATA, userNameDtoList);
         return userNameDtoList;
     }
 
@@ -109,7 +110,7 @@ public class UserServiceImpl implements UserService {
         // Execute the query
         TypedQuery<UserNameDto> typedQuery = entityManager.createQuery(query);
         List<UserNameDto> userNameDtoList = typedQuery.getResultList();
-        log.info("Fetched data: {}", userNameDtoList);
+        log.info(FETCHED_DATA, userNameDtoList);
         return userNameDtoList;
     }
 }

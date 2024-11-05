@@ -19,11 +19,11 @@ import lombok.*;
         @StoredProcedureParameter(mode = ParameterMode.IN, name = "age", type = Integer.class)
     }
 )
-@NamedQuery(
+@NamedQuery( // This annotation is for named queries
         name = "User.findUsersByAge",
         query = "SELECT new com.learn.different_db_fetches.dto.UserNameDto(u.firstName, u.lastName) FROM User u WHERE u.age = :age"
 )
-@SqlResultSetMapping( // this was needed for native query as well as stored procedure query
+@SqlResultSetMapping( // this mapping code is needed for native query as well as stored procedure query
     name = "UserNameDtoMapping",
     classes = @ConstructorResult(
         targetClass = UserNameDto.class,
