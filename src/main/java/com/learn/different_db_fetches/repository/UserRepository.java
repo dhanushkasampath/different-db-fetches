@@ -15,8 +15,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT new com.learn.different_db_fetches.dto.UserNameDto(u.firstName, u.lastName) FROM User u WHERE u.age = :age")
     List<UserNameDto> getUserNameByAgeViaHQL(@Param("age") int age);
 
-//    @Query(name = "User.getByAge", nativeQuery = true)
-//    List<UserNameDto> fetchUserNameByAgeViaStoredProcedure(@Param("age") Integer age);
+    @Query(name = "User.getByAge")
+    List<UserNameDto> getUserNameByAge(@Param("age") Integer age);
 
 //    @Query(value = "SELECT first_name, last_name FROM user WHERE age = ?1", nativeQuery = true)
 //    @Query(value = "SELECT new com.learn.different_db_fetches.dto.UserNameDto(first_name, last_name) FROM user WHERE age = ?1", nativeQuery = true)

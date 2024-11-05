@@ -59,10 +59,9 @@ public class UserServiceImpl implements UserService {
      */
     private List<UserNameDto> getDataByStoredProcedure(Integer age) {
         log.info("fetching data by stored procedures...");
-//        List<UserNameDto> userNameDtoList = userRepository.fetchUserNameByAgeViaStoredProcedure(age);
-//        log.info("Fetched data: {}", userNameDtoList);
-//        return userNameDtoList;
-        return List.of();
+        List<UserNameDto> userNameDtoList = userRepository.getUserNameByAge(age);
+        log.info("Fetched data: {}", userNameDtoList);
+        return userNameDtoList;
     }
 
     private List<UserNameDto> getDataByNativeQuery(Integer age) {
