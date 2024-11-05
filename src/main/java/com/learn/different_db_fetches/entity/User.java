@@ -25,6 +25,10 @@ import lombok.*;
         @ColumnResult(name = "last_name", type = String.class)
     }
 )
+@NamedQuery(
+        name = "User.findUsersByAge",
+        query = "SELECT new com.learn.different_db_fetches.dto.UserNameDto(u.firstName, u.lastName) FROM User u WHERE u.age = :age"
+)
 public class User {
 
     @Id

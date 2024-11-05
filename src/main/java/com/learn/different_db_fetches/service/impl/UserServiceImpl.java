@@ -30,7 +30,9 @@ public class UserServiceImpl implements UserService {
 
     private List<UserNameDto> getDataByNamedQuery(Integer age) {
         log.info("fetching data by named query...");
-        return List.of();
+        List<UserNameDto> userNameDtoList = userRepository.anyNameWeWantToGetUsersByAgeViaNamedQuery(age);
+        log.info("Fetched data: {}", userNameDtoList);
+        return userNameDtoList;
     }
 
     /**
@@ -46,13 +48,17 @@ public class UserServiceImpl implements UserService {
      */
     private List<UserNameDto> getDataByStoredProcedure(Integer age) {
         log.info("fetching data by stored procedures...");
-        List<UserNameDto> userNameDtoList = userRepository.getUserNameByAgeViaStoredProcedure(age);
-        log.info("Fetched data: {}", userNameDtoList);
-        return userNameDtoList;
+//        List<UserNameDto> userNameDtoList = userRepository.fetchUserNameByAgeViaStoredProcedure(age);
+//        log.info("Fetched data: {}", userNameDtoList);
+//        return userNameDtoList;
+        return List.of();
     }
 
     private List<UserNameDto> getDataByNativeQuery(Integer age) {
         log.info("fetching data by native query...");
+//        List<UserNameDto> userNameDtoList = userRepository.getUserNameByAgeViaNativeQuery(age);
+//        log.info("Fetched data: {}", userNameDtoList);
+//        return userNameDtoList;
         return List.of();
     }
 
